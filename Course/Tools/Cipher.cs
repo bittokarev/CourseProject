@@ -30,28 +30,41 @@ namespace Course.Tools
         {
             Debug.Assert(input != null && keyword != null);
 
-            input = input.ToLower();
+            var text = input.ToLower();
             keyword = keyword.ToLower();
 
             int len = keyword.Length;
-            var result = new StringBuilder(input.Length);
-            for (int i = 0; i < input.Length; i++)
+            var result = new StringBuilder(text.Length);
+            for (int i = 0; i < text.Length; i++)
             {
-                if (!AlphabetCharToInt.ContainsKey(input[i]))
+                if (!AlphabetCharToInt.ContainsKey(text[i]))
                 {
-                    result.Append(input[i]);
+                    result.Append(text[i]);
+                    text = text.Remove(i, 1);
                     input = input.Remove(i, 1);
                     --i;
                     continue;
                 }
 
-                result.Append
-                (
-                   AlphabetIntToChar
-                   [
-                       (AlphabetCharToInt[input[i]] + AlphabetCharToInt[keyword[i % len]]) % Power
-                   ]
-                );
+
+                if (char.IsUpper(input[i]))
+                {
+                    result.Append(
+                    char.ToUpper(AlphabetIntToChar
+                    [
+                        (AlphabetCharToInt[text[i]] + AlphabetCharToInt[keyword[i % len]]) % Power
+                    ]
+                    ));
+                }
+                else
+                {
+                    result.Append(
+                    AlphabetIntToChar
+                    [
+                        (AlphabetCharToInt[text[i]] + AlphabetCharToInt[keyword[i % len]]) % Power
+                    ]
+                    );
+                }
             }
 
             return result.ToString();
@@ -61,28 +74,40 @@ namespace Course.Tools
         {
             Debug.Assert(input != null && keyword != null);
 
-            input = input.ToLower();
+            var text = input.ToLower();
             keyword = keyword.ToLower();
 
             int len = keyword.Length;
             var result = new StringBuilder(input.Length);
-            for (int i = 0; i < input.Length; i++)
+            for (int i = 0; i < text.Length; i++)
             {
-                if (!AlphabetCharToInt.ContainsKey(input[i]))
+                if (!AlphabetCharToInt.ContainsKey(text[i]))
                 {
-                    result.Append(input[i]);
+                    result.Append(text[i]);
+                    text = text.Remove(i, 1);
                     input = input.Remove(i, 1);
                     --i;
                     continue;
                 }
 
-                result.Append
-                (
+                if (char.IsUpper(input[i]))
+                {
+                    result.Append(
+                    char.ToUpper(AlphabetIntToChar
+                    [
+                        (AlphabetCharToInt[text[i]] - AlphabetCharToInt[keyword[i % len]] + Power) % Power
+                    ]
+                    ));
+                }
+                else
+                {
+                    result.Append(
                     AlphabetIntToChar
                     [
-                        (AlphabetCharToInt[input[i]] - AlphabetCharToInt[keyword[i % len]] + Power) % Power
+                        (AlphabetCharToInt[text[i]] - AlphabetCharToInt[keyword[i % len]] + Power) % Power
                     ]
-                );
+                    );
+                }
             }
 
             return result.ToString();
